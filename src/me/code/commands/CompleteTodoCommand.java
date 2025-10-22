@@ -2,15 +2,16 @@ package me.code.commands;
 
 import me.code.models.Todo;
 import me.code.models.TodoStatus;
-import me.code.services.TodoService;
+import me.code.services.DefaultTodoService;
+import me.code.services.ITodoService;
 import me.code.utility.CommandHelper;
 
 import java.util.UUID;
 
 public class CompleteTodoCommand extends Command {
 
-    public CompleteTodoCommand() {
-        super("complete-todo", "Mark a todo as completed");
+    public CompleteTodoCommand(ITodoService todoService) {
+        super("complete-todo", "Mark a todo as completed", todoService);
     }
 
     @Override
@@ -22,7 +23,7 @@ public class CompleteTodoCommand extends Command {
 
         Todo todo;
         try {
-            todo = TodoService.updateTodoStatusById(todoId, TodoStatus.COMPLETED);
+            todo = todoService.updateTodoStatusById(todoId, TodoStatus.COMPLETED);
         } catch (Exception exception) {
             System.out.println("An error occurred, message: " + exception.getMessage());
             return;

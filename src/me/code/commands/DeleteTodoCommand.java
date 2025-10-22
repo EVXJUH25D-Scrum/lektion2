@@ -1,15 +1,16 @@
 package me.code.commands;
 
 import me.code.models.Todo;
-import me.code.services.TodoService;
+import me.code.services.DefaultTodoService;
+import me.code.services.ITodoService;
 import me.code.utility.CommandHelper;
 
 import java.util.UUID;
 
 public class DeleteTodoCommand extends Command {
 
-    public DeleteTodoCommand() {
-        super("delete-todo", "Remove todos");
+    public DeleteTodoCommand(ITodoService todoService) {
+        super("delete-todo", "Remove todos", todoService);
     }
 
     @Override
@@ -21,7 +22,7 @@ public class DeleteTodoCommand extends Command {
 
         Todo todo;
         try {
-            todo = TodoService.removeTodoById(todoId);
+            todo = todoService.deleteTodoById(todoId);
         } catch (Exception exception) {
             System.out.println("An error occurred, message: " + exception.getMessage());
             return;

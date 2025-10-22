@@ -2,15 +2,16 @@ package me.code.commands;
 
 import me.code.models.Todo;
 import me.code.models.TodoStatus;
-import me.code.services.TodoService;
+import me.code.services.DefaultTodoService;
+import me.code.services.ITodoService;
 import me.code.utility.CommandHelper;
 
 import java.util.UUID;
 
 public class StartTodoCommand extends Command {
 
-    public StartTodoCommand() {
-        super("start-todo", "Mark a todo as in-progress");
+    public StartTodoCommand(ITodoService todoService) {
+        super("start-todo", "Mark a todo as in-progress", todoService);
     }
 
     @Override
@@ -21,7 +22,7 @@ public class StartTodoCommand extends Command {
         }
         Todo todo;
         try {
-            todo = TodoService.updateTodoStatusById(todoId, TodoStatus.IN_PROGRESS);
+            todo = todoService.updateTodoStatusById(todoId, TodoStatus.IN_PROGRESS);
         } catch (Exception exception) {
             System.out.println("An error occurred, message: " + exception.getMessage());
             return;

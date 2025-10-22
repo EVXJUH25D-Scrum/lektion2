@@ -1,15 +1,16 @@
 package me.code.commands;
 
 import me.code.models.Todo;
-import me.code.services.TodoService;
+import me.code.services.DefaultTodoService;
+import me.code.services.ITodoService;
 
 import java.util.Scanner;
 import java.util.stream.Stream;
 
 public class SearchTodosCommand extends Command {
 
-    public SearchTodosCommand() {
-        super("search-todos", "Search for todos");
+    public SearchTodosCommand(ITodoService todoService) {
+        super("search-todos", "Search for todos", todoService);
     }
 
     @Override
@@ -19,7 +20,15 @@ public class SearchTodosCommand extends Command {
         System.out.print("Enter a search query: ");
         String query = scanner.nextLine();
 
-        Stream<Todo> stream = TodoService.searchTodos(query);
+        Stream<Todo> stream;
+        try {
+            stream = todoService.searchTodos(query);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            System.out.println("Something went wrong!");
+            return;
+        }
+
         stream.forEach(todo -> {
             System.out.println(" - " + todo.toString());
         });

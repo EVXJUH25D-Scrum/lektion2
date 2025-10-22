@@ -2,10 +2,11 @@ package me.code;
 
 import me.code.commands.*;
 import me.code.models.Todo;
+import me.code.repositories.FileTodoRepository;
 import me.code.services.ICommandService;
+import me.code.services.ITodoService;
 import me.code.services.TerminalCommandService;
-import me.code.services.TodoRepository;
-import me.code.services.TodoService;
+import me.code.services.DefaultTodoService;
 
 import java.util.ArrayList;
 
@@ -25,17 +26,17 @@ public class Main {
      */
 
     public static void main(String[] args) {
-        ArrayList<Todo> todos = TodoRepository.loadTodosFromFile();
-        TodoService.loadTodos(todos);
-
         ICommandService commandService = new TerminalCommandService();
+        ITodoService todoService = new DefaultTodoService(
+                new FileTodoRepository()
+        );
 
-        commandService.registerCommand(new ListTodosCommand());
-        commandService.registerCommand(new CreateTodoCommand());
-        commandService.registerCommand(new SearchTodosCommand());
-        commandService.registerCommand(new CompleteTodoCommand());
-        commandService.registerCommand(new DeleteTodoCommand());
-        commandService.registerCommand(new StartTodoCommand());
+        commandService.registerCommand(new ListTodosCommand(todoService));
+        commandService.registerCommand(new CreateTodoCommand(todoService));
+        commandService.registerCommand(new SearchTodosCommand(todoService));
+        commandService.registerCommand(new CompleteTodoCommand(todoService));
+        commandService.registerCommand(new DeleteTodoCommand(todoService));
+        commandService.registerCommand(new StartTodoCommand(todoService));
 
         if (commandService instanceof TerminalCommandService service) {
             service.start();

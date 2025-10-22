@@ -1,7 +1,8 @@
 package me.code.commands;
 
 import me.code.models.Todo;
-import me.code.services.TodoService;
+import me.code.services.DefaultTodoService;
+import me.code.services.ITodoService;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -10,8 +11,8 @@ import java.util.Scanner;
 
 public class CreateTodoCommand extends Command {
 
-    public CreateTodoCommand() {
-        super("create-todo", "Create and save a new todo");
+    public CreateTodoCommand(ITodoService todoService) {
+        super("create-todo", "Create and save a new todo", todoService);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class CreateTodoCommand extends Command {
 
         Todo todo = new Todo(title, deadline, category, priority);
         try {
-            TodoService.addTodo(todo);
+            todoService.createTodo(todo);
             System.out.println("Todo '" + title + "' has been created!");
         } catch (Exception exception) {
             System.out.println("An error occurred, message: " + exception.getMessage());
