@@ -2,7 +2,8 @@ package me.code.commands;
 
 import me.code.services.ITodoService;
 
-public class CountTodosCommand extends  Command{
+@CommandInfo(order = 7)
+public class CountTodosCommand extends Command {
 
     public CountTodosCommand(ITodoService todoService) {
         super("count", "Count all todos", todoService);
@@ -14,6 +15,7 @@ public class CountTodosCommand extends  Command{
             long count = todoService.getTodos().count();
             System.out.println("Todos: " + count);
         } catch (Exception exception) {
+            System.out.println("Something went wrong, try again later!");
             exception.printStackTrace();
         }
     }
